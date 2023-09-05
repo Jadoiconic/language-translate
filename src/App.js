@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import Cookies from 'js-cookie';
 
 const lang = [
   {
@@ -16,12 +17,20 @@ const lang = [
 ];
 const App = () => {
   const { t } = useTranslation();
+  const [language, setLanguage] = useState(Cookies.get('i18next')); 
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    document.querySelector("html").lang = language;
+    Cookies.set('i18next', language);
+    // localStorage.setItem('i18nextLng', language);
+  }, [language]);
 
   return (
     <>
-      <nav className="d-flex py-2 align-items-center shadow justify-content-between px-4" style={{backgroundColor:'teal'}}>
+      <nav
+        className="d-flex py-2 align-items-center shadow justify-content-between px-4"
+        style={{ backgroundColor: "teal" }}
+      >
         <div>
           <h1>{t("welcomeToReact")}</h1>
         </div>
@@ -42,7 +51,10 @@ const App = () => {
               <li>
                 <button
                   className="dropdown-item"
-                  onClick={() => i18next.changeLanguage(code)}
+                  onClick={() => {
+                    i18next.changeLanguage(code);
+                    setLanguage(code);
+                  }}
                 >
                   <span className="flag-icon flag-icon-bg mx-2"> </span>
                   {name}
@@ -54,7 +66,7 @@ const App = () => {
       </nav>
       <div
         className="d-flex align-items-center"
-        style={{ minHeight: "80vh",backgroundColor:'#eee' }}
+        style={{ minHeight: "80vh", backgroundColor: "#eee" }}
       >
         <article className="p-4">
           <h2 className="fs-1">DevSolutions</h2>
